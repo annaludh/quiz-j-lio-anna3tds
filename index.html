@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quiz Super Mario</title>
+  <style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: url('/img/background.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: #e0f7ff; /* Azul bem clarinho do céu */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+}
+.container {
+  background: rgba(0, 40, 80, 0.8); /* Azul escuro com transparência */
+  padding: 20px;
+  border-radius: 15px;
+  max-width: 600px;
+  width: 90%;
+}
+    h1 { margin-bottom: 20px; }
+    .answers button {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  font-size: 16px;
+  background-color: #4a90e2; /* Azul médio */
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.answers button:hover {
+  background-color: #2e73c4; /* Azul mais escuro no hover */
+}
+
+.correct { background-color: #2ecc71 !important; } /* Verde da grama */
+.wrong { background-color: #e74c3c !important; } /* Vermelho para erro */
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Quiz Super Mario</h1>
+    <p id="question"></p>
+    <div class="answers" id="answers"></div>
+    <button id="nextBtn">Próximo</button>
+    <p id="score"></p>
+  </div>
+
+  <script>
+    const questions = [
+      {q: 'Qual é o nome do irmão do Mario?', a: ['Wario', 'Luigi', 'Toad', 'Yoshi'], correct: 1},
+      {q: 'Qual item faz Mario crescer?', a: ['Flor de Fogo', 'Cogumelo', 'Estrela', 'Pena'], correct: 1},
+      {q: 'Quem é o vilão que sequestra a princesa?', a: ['Bowser', 'Kamek', 'King Boo', 'Waluigi'], correct: 0},
+      {q: 'Qual princesa o Mario salva?', a: ['Daisy', 'Peach', 'Zelda', 'Pauline'], correct: 1},
+      {q: 'Qual companheiro dinossauro aparece em Super Mario World?', a: ['Birdo', 'Yoshi', 'Reznor', 'Petey'], correct: 1},
+      {q: 'Qual power-up lança bolas de fogo?', a: ['Flor de Fogo', 'Estrela', 'Cogumelo 1-UP', 'Pena'], correct: 0},
+      {q: 'Onde se passa Super Mario World?', a: ['Mushroom Kingdom', 'Dinosaur Land', 'Isle Delfino', 'New Donk'], correct: 1},
+      {q: 'Qual bloco libera moedas?', a: ['Bloco ?', 'Nota Musical', 'Bloco P', 'On/Off'], correct: 0},
+      {q: 'Qual cogumelo dá vida extra?', a: ['Mega', '1-UP', 'Mini', 'Poison'], correct: 1},
+      {q: 'Quem usa chapéu verde e estrelou Luigi’s Mansion?', a: ['Luigi', 'Toadette', 'Waluigi', 'Koopa'], correct: 0}
+    ];
+
+    let current = 0;
+    let score = 0;
+    const questionEl = document.getElementById('question');
+    const answersEl = document.getElementById('answers');
+    const nextBtn = document.getElementById('nextBtn');
+    const scoreEl = document.getElementById('score');
+
+    function showQuestion() {
+      questionEl.textContent = questions[current].q;
+      answersEl.innerHTML = '';
+      questions[current].a.forEach((answer, i) => {
+        const btn = document.createElement('button');
+        btn.textContent = answer;
+        btn.addEventListener('click', () => selectAnswer(i, btn));
+        answersEl.appendChild(btn);
+      });
+      nextBtn.style.display = 'none';
+    }
+
+    function selectAnswer(i, btn) {
+      const correctIndex = questions[current].correct;
+      const buttons = answersEl.querySelectorAll('button');
+      buttons.forEach((b, idx) => {
+        b.disabled = true;
+        if(idx === correctIndex) b.classList.add('correct');
+        if(idx === i && i !== correctIndex) b.classList.add('wrong');
+      });
+      if(i === correctIndex) score++;
+      nextBtn.style.display = 'block';
+    }
+
+    nextBtn.addEventListener('click', () => {
+      current++;
+      if(current < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    });
+
+    function showResult() {
+      questionEl.textContent = 'Quiz Concluído!';
+      answersEl.innerHTML = '';
+      nextBtn.style.display = 'none';
+      scoreEl.textContent = `Você acertou ${score} de ${questions.length}!`;
+    }
+
+    showQuestion();
+  </script>
+</body>
+</html>
